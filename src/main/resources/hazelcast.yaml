@@ -1,0 +1,2 @@
+hazelcast:
+  cluster-name: pg1-enhancement-hazelcast-cluster

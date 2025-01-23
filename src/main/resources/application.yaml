@@ -1,0 +1,66 @@
+spring:
+  datasource:
+    password: ${PG1_ENHANCEMENT_DB_PASSWORD:dummy}
+    url: ${PG1_ENHANCEMENT_DB_HOST:jdbc:postgresql://localhost:5433/tps}
+    username: ${PG1_ENHANCEMENT_DB_USERNAME:spring_user}
+  profiles:
+    active: ${PG1_ENHANCEMENT_ENV_NAME:local}
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        show-sql: true
+        ddl-auto: none
+
+config:
+  server_info:
+    version: "@project.version@"
+    last_update: "2023-02-10"
+    server_environment: ${PG1_ENHANCEMENT_ENV_NAME:local}
+    description: "This server was created in the purpose to enhance Bakong PG1 server"
+    changes_history:  "
+    - [0.1.18] adjust khqr inquiry sort with create time ASC \n
+    - [0.1.17] release a new version for PROD rollout \n
+    - [0.1.16] CDRB-4173 : BE: 6.1, Setup or integrate the authentication between PG1 enhancement and SPG-CIFTP
+               CDRB-4174 : BE: 6.2, Setup the Bakong small/large value configuration mechanism in DB \n
+    - [0.1.15] add page size config for incoming bankong khqr endpoint and set default page size to 1 \n   
+    - [0.1.14] add oskikhppxxx@oski to replace the placeholder in script for all env. \n
+    - [0.1.13] add response content back to bakong khqr status update endpoint \n
+    - [0.1.12] filter out null AccountNumber from /bakong-khqr-transactions/incoming response and add scheduler to run BakongKHQR transaction validation  \n
+    - [0.1.11] fixed issue in json saving and add duplicate status \n
+    - [0.1.10] fixed pagination issue \n
+    - [0.1.9] getting sender name and sender account number if bk_khqr table does not have enough value \n
+    - [0.1.8] Switch to use currency field in fst_transaction \n
+    - [0.1.7] Adding config parameter for SSL/TLS support \n
+    - [0.1.6] Setup multi-environment compatibility \n
+    - [0.1.5] Fixed error when calling /getTransactionHistory with payment info and multi record matched \n
+    - [0.1.4] Return amount as string, uppercase the assetId in /bakong-khqr-transactions/incoming response \n
+    - [0.1.3] Format with 2 decimal points for amount in /bakong-khqr-transactions/incoming response \n
+    - [0.1.2] Adjusting string of assertId field in /bakong-khqr-transactions/incoming endpoint \n
+    - [0.1.1] Fixed database credential in config \n
+    - [0.1.0] Create /bakong-khqr-transactions/incoming/status endpoint (ticket: 1965)\n
+    - [0.1.0] Create /bakong-khqr-transactions/incoming endpoint (ticket: 1964) \n
+    - [0.0.2] Create server information endpoint \n
+    - [0.0.2] Changed the endpoint to accept partition code instead account number"
+  get_incoming_bakong_khqr:
+    page_size: ${PAGE_SIZE:1}
+  ciftp:
+    url: ${CIFTP_URL:http://10.202.35.15:8765}
+    username: ${CIFTP_USERNAME:spg_admin}
+    password: ${CIFTP_PASSWORD:Ksjoqiwjnldmpijap2ijdoisjfoi}
+    largeValueUSD: ${CIFTP_LARGE_VALUE_USD:50000}
+    largeValueKHR: ${CIFTP_LARGE_VALUE_KHR:200000000}
+
+server:
+  port: ${SERVER_PORT:8088}
+  ssl:
+    enabled: ${SSL_ENABLE:false}
+    key-store-type: ${KEY_STORE_TYPE:JKS}
+    key-store: ${KEY_STORE_PATH:"PATH_TO_KEY_STORE_JKS_FILE"}
+    key-store-password: ${KEY_STORE_PASSWORD:"KEY_STORE_PASSWORD"}
+    enabled-protocols: ${ENABLED_PROTOCOLS_VERSION:TLSv1.2}
+    protocol: TLS
+  servlet:
+    context-path: /bakongpg1
+  error:
+    include-stacktrace: never

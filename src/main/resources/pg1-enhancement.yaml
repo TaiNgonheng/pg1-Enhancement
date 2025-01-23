@@ -1,0 +1,870 @@
+openapi: 3.0.3
+info:
+  contact:
+    email: voathnak.lim@rhbgroup.com
+  title: PG1 Enhancement
+  description: PG1 Enhancement
+  version: 1.0.0
+servers:
+  - url: 'https://dev.pg1-enhancement.temporary'
+    description: Development
+  - url: 'http://localhost:8080'
+    description: Local development server
+paths:
+  /getTransactionHistory:
+    get:
+      tags:
+        - fast-transaction
+        - fast-iroha-transaction
+      operationId: getTransactionHistory
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: sender
+          description: Sender's account number
+        - schema:
+            type: string
+          in: query
+          name: receiver
+          description: Receiver's account number
+        - schema:
+            type: string
+          in: query
+          name: payment_ref
+          description: Payment Reference
+        - schema:
+            type: string
+          in: query
+          name: transactionHash
+          description: Transaction Hash
+      description: List of configurations
+      summary: Return list of configuration
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionHistoryResponse'
+    parameters: []
+  /getServerInfo:
+    get:
+      summary: Your GET endpoint
+      tags:
+        - server-info
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerInfoResponse'
+      operationId: getServerInfo
+      description: ''
+    parameters: []
+  /bakong-khqr-transactions/incoming:
+    get:
+      tags:
+        - bakong-khqr
+      summary: get 20 paginate incoming bakong KH QR
+      operationId: getIncomingBakongKHQR
+      description: getIncomingBakongKHQR
+      parameters:
+        - schema:
+            type: integer
+            default: 0
+          in: query
+          name: page
+          description: page's number for pagination
+        - schema:
+            type: integer
+          in: query
+          name: size
+          description: size of the page
+        - schema:
+            type: string
+            enum:
+              - PENDING
+              - COMPLETED
+              - FAILED
+              - REFUND_FAILED
+            default: PENDING
+          in: query
+          name: status
+          description: status of bakong kh qr
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PendingBakongKHQRReponse'
+  /bakong-khqr-transactions/incoming/status:
+    put:
+      summary: Incoming Transaction Status Update
+      operationId: incomingTransactionStatusUpdate
+      responses:
+        '200':
+          description: Bakong khqr status update response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BakongKHQRStatusUpdateResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+        '404':
+          description: Not Found
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/incomingTransactionStatusUpdateRequest'
+      description: Incoming transaction status update endpoint
+      tags:
+        - bakong-khqr
+    parameters: []
+  /ciftp/transactions/inquiry:
+    post:
+      tags:
+        - ciftp
+      summary: get transaction status base on transaction hash, amount and currency
+      operationId: inquireCIFTPTransaction
+      description: get transaction status base on transaction hash, amount and currency
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CIFTPTransactionInquiryRequest'
+      responses:
+        '200':
+          description: Bakong khqr status update response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CIFTPTransactionInquiryResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+        '404':
+          description: Not Found
+components:
+  responses:
+    NotFoundResponse:
+      description: |-
+        {
+            "timestamp": "2021-10-22T08:01:38.183+00:00",
+            "message": "Transaction not found",
+            "details": "uri=/transaction-history-iroha/980011025825-981012050004-ABCDEE12122"
+        }
+      content:
+        application/json:
+          schema:
+            description: ''
+            type: object
+            properties:
+              timestamp:
+                type: string
+                minLength: 1
+              message:
+                type: string
+                minLength: 1
+              details:
+                type: string
+                minLength: 1
+            required:
+              - timestamp
+              - message
+              - details
+            x-examples:
+              example-1:
+                timestamp: '2021-10-22T08:01:38.183+00:00'
+                message: Transaction not found
+                details: uri=/transaction-history-iroha/980011025825-981012050004-ABCDEE12122
+        application/xml:
+          schema:
+            description: ''
+            type: object
+            properties:
+              timestamp:
+                type: string
+                minLength: 1
+              message:
+                type: string
+                minLength: 1
+              details:
+                type: string
+                minLength: 1
+            required:
+              - timestamp
+              - message
+              - details
+            x-examples:
+              example-1:
+                timestamp: '2021-10-22T08:01:38.183+00:00'
+                message: Transaction not found
+                details: uri=/transaction-history-iroha/980011025825-981012050004-ABCDEE12122
+      headers: {}
+    InternalServerErrorResponse:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            description: ''
+            type: object
+            properties:
+              timestamp:
+                type: string
+                minLength: 1
+              message:
+                type: string
+                minLength: 1
+              details:
+                type: string
+                minLength: 1
+            required:
+              - timestamp
+              - message
+              - details
+            x-examples:
+              example-1:
+                timestamp: '2021-10-22T08:01:38.183+00:00'
+                message: Transaction not found
+                details: uri=/transaction-history-iroha/980011025825-981012050004-ABCDEE12122
+  schemas:
+    TransactionHistoryResponse:
+      description: ''
+      type: object
+      properties:
+        fiTransactionId:
+          type: number
+        sourceAccountId:
+          type: string
+        destinationAccountId:
+          type: string
+        sourceName:
+          type: string
+        destinationName:
+          type: string
+        sourceBankParticipantCode:
+          type: string
+        sourceBankName:
+          type: string
+        destinationBankParticipantCode:
+          type: string
+        destinationBankName:
+          type: string
+        amount:
+          type: number
+        currencyName:
+          type: string
+        transactionCreatedTime:
+          type: number
+        sourcePhoneNumber:
+          type: string
+        destinationPhoneNumber:
+          type: string
+        sourceWalletType:
+          type: string
+        destinationWalletType:
+          type: string
+        status:
+          type: string
+        transactionHash:
+          type: string
+        assetId:
+          type: string
+        description:
+          type: string
+        errorMessage:
+          type: string
+        fastTransactionId:
+          type: number
+        receiverBankAccount:
+          type: string
+        fstTrxStatus:
+          type: string
+        sourceAddress:
+          type: string
+        destinationAddress:
+          type: string
+        qrCode:
+          type: string
+        fee:
+          type: number
+        tax:
+          type: number
+        transactionContent:
+          type: object
+          properties:
+            trxHash:
+              type: string
+            date:
+              type: string
+            commandList:
+              type: array
+              uniqueItems: true
+              minItems: 1
+              items:
+                required:
+                  - commandCase
+                  - srcAccountId
+                  - dstAccountId
+                  - amount
+                  - assetId
+                  - description
+                  - feeComputation
+                  - name
+                  - code
+                properties:
+                  commandCase:
+                    type: string
+                  srcAccountId:
+                    type: string
+                  dstAccountId:
+                    type: string
+                  amount:
+                    type: number
+                  assetId:
+                    type: string
+                  description:
+                    type: string
+                  feeComputation:
+                    type: string
+                  name:
+                    type: string
+                  code:
+                    type: number
+            details:
+              type: object
+              properties:
+                senderName:
+                  type: string
+                receiverName:
+                  type: string
+                senderType:
+                  type: string
+                receiverType:
+                  type: string
+                senderNumber:
+                  type: string
+                receiverNumber:
+                  type: string
+                senderAddress:
+                  type: string
+                receiverAddress:
+                  type: string
+                currency:
+                  type: string
+                currencySymbol:
+                  type: string
+                assetId:
+                  type: string
+                sourceOfFunds:
+                  type: string
+              required:
+                - senderName
+                - receiverName
+                - senderType
+                - receiverType
+                - senderNumber
+                - receiverNumber
+                - senderAddress
+                - receiverAddress
+                - currency
+                - currencySymbol
+                - assetId
+                - sourceOfFunds
+            revers:
+              type: string
+          required:
+            - trxHash
+            - date
+            - commandList
+            - details
+            - revers
+        transactionType:
+          type: string
+      required:
+        - fiTransactionId
+        - sourceAccountId
+        - destinationAccountId
+        - sourceName
+        - destinationName
+        - sourceBankParticipantCode
+        - sourceBankName
+        - destinationBankParticipantCode
+        - destinationBankName
+        - amount
+        - currencyName
+        - transactionCreatedTime
+        - sourcePhoneNumber
+        - destinationPhoneNumber
+        - sourceWalletType
+        - destinationWalletType
+        - status
+        - transactionHash
+        - assetId
+        - description
+        - errorMessage
+        - fastTransactionId
+        - receiverBankAccount
+        - fstTrxStatus
+        - sourceAddress
+        - destinationAddress
+        - qrCode
+        - fee
+        - tax
+        - transactionContent
+        - transactionType
+      x-examples:
+        example-1:
+          fiTransactionId: 1
+          sourceAccountId: ''
+          destinationAccountId: ''
+          sourceName: ''
+          destinationName: ''
+          sourceBankParticipantCode: ''
+          sourceBankName: ''
+          destinationBankParticipantCode: ''
+          destinationBankName: ''
+          amount: 1
+          currencyName: ''
+          transactionCreatedTime: 1
+          sourcePhoneNumber: ''
+          destinationPhoneNumber: ''
+          sourceWalletType: ''
+          destinationWalletType: ''
+          status: ''
+          transactionHash: ''
+          assetId: ''
+          description: ''
+          errorMessage: ''
+          fastTransactionId: 1
+          receiverBankAccount: ''
+          fstTrxStatus: ''
+          sourceAddress: ''
+          destinationAddress: ''
+          qrCode: ''
+          fee: 1
+          tax: 1
+          transactionContent:
+            trxHash: ''
+            date: ''
+            commandList:
+              - commandCase: ''
+                srcAccountId: ''
+                dstAccountId: ''
+                amount: 1
+                assetId: ''
+                description: ''
+                feeComputation: ''
+                name: ''
+                code: 1
+            details:
+              senderName: ''
+              receiverName: ''
+              senderType: ''
+              receiverType: ''
+              senderNumber: ''
+              receiverNumber: ''
+              senderAddress: ''
+              receiverAddress: ''
+              currency: ''
+              currencySymbol: ''
+              assetId: ''
+              sourceOfFunds: ''
+            revers: ''
+          transactionType: ''
+    OriginTransactionContent:
+      description: ''
+      type: object
+      x-examples:
+        example-1:
+          date: 1626145346829
+          revers: false
+          details:
+            assetId: usd#nbc
+            currency: USD
+            senderBin: RHB Bank (Camboia) Plc.
+            senderName: TEST
+            senderType: BANK
+            receiverBin: Kookmin Bank Cambodia PLC.
+            receiverName: TEST
+            receiverType: BANK
+            senderNumber: null
+            senderAddress: null
+            sourceOfFunds:
+              name: TEST
+              phoneNumber: '980011025825'
+            currencySymbol: null
+            receiverNumber: null
+            senderPartcode: OSKIKHPPXXX
+            senderUsername: null
+            receiverAddress: null
+            receiverPartcode: CZNBKHPPXXX
+            receiverUsername: null
+          trxHash: 390c679703eeb0d1d8106bd103074022a2ed0d6ebdc94469d16056c2215828e3
+          commandList:
+            - code: null
+              name: null
+              amount: 800
+              assetId: usd#nbc
+              commandCase: TRANSFER_ASSET
+              description: TRANSFER/ABCDEE1212
+              dstAccountId: cznbkhppxxx@cznb
+              srcAccountId: oskikhppxxx@oski
+              feeComputation: null
+          transferType: CSCS
+          reversedTrxHash: null
+      properties:
+        date:
+          type: number
+        revers:
+          type: boolean
+        details:
+          type: object
+          required:
+            - assetId
+            - currency
+            - senderBin
+            - senderName
+            - senderType
+            - receiverBin
+            - receiverName
+            - receiverType
+            - sourceOfFunds
+            - senderPartcode
+            - receiverPartcode
+          properties:
+            assetId:
+              type: string
+              minLength: 1
+            currency:
+              type: string
+              minLength: 1
+            senderBin:
+              type: string
+              minLength: 1
+            senderName:
+              type: string
+              minLength: 1
+            senderType:
+              type: string
+              minLength: 1
+            receiverBin:
+              type: string
+              minLength: 1
+            receiverName:
+              type: string
+              minLength: 1
+            receiverType:
+              type: string
+              minLength: 1
+            senderNumber:
+              type: string
+            senderAddress:
+              type: string
+            sourceOfFunds:
+              type: object
+              required:
+                - name
+                - phoneNumber
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                phoneNumber:
+                  type: string
+                  minLength: 1
+            currencySymbol:
+              type: string
+            receiverNumber:
+              type: string
+            senderPartcode:
+              type: string
+              minLength: 1
+            senderUsername:
+              type: string
+            receiverAddress:
+              type: string
+            receiverPartcode:
+              type: string
+              minLength: 1
+            receiverUsername:
+              type: string
+        trxHash:
+          type: string
+          minLength: 1
+        commandList:
+          type: array
+          uniqueItems: true
+          minItems: 1
+          items:
+            type: object
+            properties:
+              code: {}
+              name: {}
+              amount:
+                type: number
+              assetId:
+                type: string
+                minLength: 1
+              commandCase:
+                type: string
+                minLength: 1
+              description:
+                type: string
+                minLength: 1
+              dstAccountId:
+                type: string
+                minLength: 1
+              srcAccountId:
+                type: string
+                minLength: 1
+              feeComputation: {}
+            required:
+              - amount
+              - assetId
+              - commandCase
+              - description
+              - dstAccountId
+              - srcAccountId
+        transferType:
+          type: string
+          minLength: 1
+        reversedTrxHash: {}
+      required:
+        - date
+        - revers
+        - details
+        - trxHash
+        - commandList
+        - transferType
+    ServerInfoResponse:
+      title: ServerInfoResponse
+      type: object
+      properties:
+        version:
+          type: object
+          properties:
+            name:
+              type: string
+            date:
+              type: string
+            changesHistory:
+              type: array
+              items:
+                type: string
+            serverEnvironment:
+              type: string
+            description:
+              type: string
+    PendingBakongKHQRReponse:
+      type: object
+      properties:
+        totalItems:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+        currentPage:
+          type: integer
+          format: int32
+        bakongKHQR:
+          type: array
+          items:
+            $ref: '#/components/schemas/BakongKHQR'
+    BakongKHQRStatusUpdateResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - ACSP
+    BakongKHQR:
+      type: object
+      properties:
+        id:
+          type: string
+        trxHash:
+          type: string
+        amount:
+          type: string
+        assetId:
+          type: string
+        accountNumber:
+          type: string
+        accountName:
+          type: string
+        billNumber:
+          type: string
+        srcAccountId:
+          type: string
+        srcAccountType:
+          type: string
+        srcPartCode:
+          type: string
+        dstPartCode:
+          type: string
+        dstAccountType:
+          type: string
+        senderAccount:
+          type: string
+        senderName:
+          type: string
+        createTime:
+          type: string
+    SenderDetails:
+      type: object
+      properties:
+        fullName:
+          type: string
+        accountNumber:
+          type: string
+
+    incomingTransactionStatusUpdateRequest:
+      title: incomingTransactionStatusUpdateRequest
+      type: object
+      properties:
+        transactionHash:
+          type: string
+          minLength: 1
+        status:
+          type: string
+          minLength: 1
+          enum:
+            - COMPLETED
+            - FAILED
+            - REFUND_FAILED
+            - DUPLICATE
+      required:
+        - transactionHash
+        - status
+    CIFTPAuthRequest:
+      type: object
+      description: CIFTP authentication request
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    CIFTPAuthResponse:
+      type: object
+      properties:
+        status:
+          type: object
+          properties:
+            code:
+              type: integer
+              format: int32
+            errorCode:
+              type: string
+              format: nullable
+            error:
+              type: string
+              format: nullable
+            warning:
+              type: string
+              format: nullable
+            message:
+              type: string
+              format: nullable
+        data:
+          type: object
+          properties:
+            id_token:
+              type: string
+    Currency:
+      type: string
+      enum:
+        - USD
+        - KHR
+    CIFTPTransactionInquiryRequest:
+      type: object
+      properties:
+        amount:
+          type: number
+          format: double
+        currency:
+          $ref: '#/components/schemas/Currency'
+        transactionHash:
+          type: string
+    CIFTPTransactionInquiryResponse:
+      type: object
+      properties:
+        sourceAccountId:
+          type: string
+        destinationAccountId:
+          type: string
+        sourceName:
+          type: string
+        destinationName:
+          type: string
+        sourceBankName:
+          type: string
+        destinationBankName:
+          type: string
+        amount:
+          type: number
+          format: double
+        currency:
+          $ref: '#/components/schemas/Currency'
+        transactionHash:
+          type: string
+        status:
+          type: string
+    CIFTPWebHistoryResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/CIFTPWebHistory'
+    CIFTPWebHistory:
+      type: object
+      properties:
+        fiTransactionId:
+          type: integer
+          format: int64
+        sourceAccountId:
+          type: string
+        destinationAccountId:
+          type: string
+        sourceName:
+          type: string
+        destinationName:
+          type: string
+        sourceBankParticipantCode:
+          type: string
+        sourceBankName:
+          type: string
+        destinationBankParticipantCode:
+          type: string
+        destinationBankName:
+          type: string
+        amount:
+          type: number
+          format: double
+        currencyName:
+          $ref: '#/components/schemas/Currency'
+        transactionHash:
+          type: string
+        status:
+          type: string
+    CIFTPChannel:
+      type: string
+      enum:
+        - RETAIL
+        - LARGE_VALUE
+tags:
+  - name: fast-iroha-transaction
+  - name: fast-transaction
