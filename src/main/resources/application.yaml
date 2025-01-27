@@ -11,7 +11,11 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         show-sql: true
         ddl-auto: none
-
+  security:
+    user:
+      name: heng
+      password: password
+      roles: ADMIN
 config:
   server_info:
     version: "@project.version@"
@@ -64,3 +68,6 @@ server:
     context-path: /bakongpg1
   error:
     include-stacktrace: never
+
+app.jwt-secret: TaiNgonheng
+app.jwt-expiration-milliseconds: 604800000
