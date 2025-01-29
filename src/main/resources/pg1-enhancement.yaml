@@ -63,6 +63,19 @@ paths:
       operationId: getServerInfo
       description: ''
     parameters: []
+  /generate:
+    get:
+      summary: Generate a JWT token
+      operationId: generateToken
+      tags:
+        - JWT
+      responses:
+        '200':
+          description: Successfully generated token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JwtTokenResponse'
   /bakong-khqr-transactions/incoming:
     get:
       tags:
@@ -667,6 +680,25 @@ components:
               type: string
             description:
               type: string
+    JwtTokenResponse:
+      title: JwtTokenResponse
+      type: object
+      properties:
+        version:
+          type: object
+          properties:
+            name:
+              type: string
+            date:
+              type: string
+        changesHistory:
+          type: array
+          items:
+            type: string
+        serverEnvironment:
+          type: string
+        description:
+          type: string
     PendingBakongKHQRReponse:
       type: object
       properties:

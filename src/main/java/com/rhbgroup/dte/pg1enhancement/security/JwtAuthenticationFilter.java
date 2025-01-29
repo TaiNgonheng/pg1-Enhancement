@@ -4,31 +4,29 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
-import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
-
+import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
   @Override
-  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-          throws ServletException, IOException {
-
+  protected void doFilterInternal(
+      HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+      throws ServletException, IOException {
     String requestPath = request.getServletPath();
 
-    // Skip JWT authentication for /generate
+    // Skip JWT authentication for generate
     if (requestPath.equals("/generate")) {
       filterChain.doFilter(request, response);
       return;
     }
 
     final String authorizationHeader = request.getHeader("Authorization");
-
     if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
       String token = authorizationHeader.substring(7);
       try {
@@ -44,7 +42,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Missing JWT Token");
       return;
     }
-
     filterChain.doFilter(request, response);
   }
 }

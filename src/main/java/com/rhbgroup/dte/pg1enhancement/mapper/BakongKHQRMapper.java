@@ -1,10 +1,14 @@
 package com.rhbgroup.dte.pg1enhancement.mapper;
 
 import com.google.gson.Gson;
-import com.rhbgroup.dte.pg1enhancement.model.*;
+import com.rhbgroup.dte.pg1enhancement.model.BakongKHQRDraft;
+import com.rhbgroup.dte.pg1enhancement.model.BakongKHQRJoinFastIrohaTransaction;
+import com.rhbgroup.dte.pg1enhancement.model.OriginTransactionContent;
+import com.rhbgroup.dte.pg1enhancement.model.SenderDetails;
 import com.rhbgroup.dte.pg1enhancement.util.PropertyAccessor;
 import java.math.BigDecimal;
 import java.util.List;
+import kh.org.nbc.bakong_khqr.BakongKHQR;
 import kh.org.nbc.bakong_khqr.model.KHQRDecodeData;
 import kh.org.nbc.bakong_khqr.utils.StringUtils;
 import org.mapstruct.Mapper;
@@ -129,6 +133,6 @@ public interface BakongKHQRMapper {
 
   BakongKHQR toBakongKHQR(BakongKHQRDraft bakongKHQRDraft);
 
-  List<BakongKHQR> fromBakongKHQRDraftToPendingBakongKHQRResponse(
-      List<BakongKHQRDraft> bakongKHQRDraftList);
+  List<com.rhbgroup.dte.pg1enhancement.model.BakongKHQR>
+      fromBakongKHQRDraftToPendingBakongKHQRResponse(List<BakongKHQRDraft> bakongKHQRDraftList);
 }

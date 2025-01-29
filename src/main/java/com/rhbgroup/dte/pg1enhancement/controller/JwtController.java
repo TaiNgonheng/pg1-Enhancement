@@ -1,17 +1,28 @@
 package com.rhbgroup.dte.pg1enhancement.controller;
 
+import com.rhbgroup.dte.pg1enhancement.api.JwtApiDelegate;
+import com.rhbgroup.dte.pg1enhancement.model.JwtTokenResponse;
 import com.rhbgroup.dte.pg1enhancement.security.JwtUtil;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
 
+@Service
+@AllArgsConstructor
+@Slf4j
 @RestController
-public class JwtController {
+public class JwtController implements JwtApiDelegate {
 
-  @GetMapping("/generate")
-  public ResponseEntity<String> generateToken() {
-
+  @Override
+  public ResponseEntity<JwtTokenResponse> generateToken() {
+    log.info("API: getJwtToken");
     String token = JwtUtil.generateToken();
-    return ResponseEntity.ok("Generated Token: " + token);
+    JwtTokenResponse jwtResponse = new JwtTokenResponse();
+    jwtResponse.setDescription("Generated Token: " + token);
+    jwtResponse.setServerEnvironment("Production");
+
+    return ResponseEntity.ok(jwtResponse);
   }
 }

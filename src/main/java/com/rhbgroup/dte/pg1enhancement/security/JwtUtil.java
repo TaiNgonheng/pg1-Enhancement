@@ -7,7 +7,8 @@ import java.util.Date;
 
 public class JwtUtil {
 
-  private static final String SECRET_KEY = "ThisIsA256BitSecureKeyForJWTsExamplehihivuj";
+  private static final String SECRET_KEY =
+      "88fffe73860aa634f7c0ceae0a782427cd1e7bbeb3d88302ba24c6c8cd0aaca2";
   private static final long EXPIRATION_TIME = 3600000; // 1 hour
   private static final String STATIC_USERNAME = "TaiNgonheng";
   private static final String STATIC_PASSWORD = "heng";
@@ -24,9 +25,5 @@ public class JwtUtil {
 
   public static Claims validateToken(String token) {
     return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
-  }
-
-  public static boolean isValidCredentials(String username, String password) {
-    return STATIC_USERNAME.equals(username) && STATIC_PASSWORD.equals(password);
   }
 }
