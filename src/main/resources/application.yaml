@@ -13,9 +13,8 @@ spring:
         ddl-auto: none
   security:
     user:
-      name: heng
-      password: password
-      roles: ADMIN
+      name: ${STATIC_USERNAME:TaiNgonheng}
+      password: ${STATIC_PASSWORD:heng}
 config:
   server_info:
     version: "@project.version@"
@@ -27,7 +26,7 @@ config:
     - [0.1.17] release a new version for PROD rollout \n
     - [0.1.16] CDRB-4173 : BE: 6.1, Setup or integrate the authentication between PG1 enhancement and SPG-CIFTP
                CDRB-4174 : BE: 6.2, Setup the Bakong small/large value configuration mechanism in DB \n
-    - [0.1.15] add page size config for incoming bankong khqr endpoint and set default page size to 1 \n   
+    - [0.1.15] add page size config for incoming bankong khqr endpoint and set default page size to 1 \n
     - [0.1.14] add oskikhppxxx@oski to replace the placeholder in script for all env. \n
     - [0.1.13] add response content back to bakong khqr status update endpoint \n
     - [0.1.12] filter out null AccountNumber from /bakong-khqr-transactions/incoming response and add scheduler to run BakongKHQR transaction validation  \n
@@ -68,6 +67,3 @@ server:
     context-path: /bakongpg1
   error:
     include-stacktrace: never
-
-app.jwt-secret: TaiNgonheng
-app.jwt-expiration-milliseconds: 604800000
