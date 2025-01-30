@@ -76,6 +76,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/JwtTokenResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+        '404':
+          description: Not Found
   /bakong-khqr-transactions/incoming:
     get:
       tags:

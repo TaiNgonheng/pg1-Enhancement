@@ -20,15 +20,20 @@ public class SecurityConfig {
     http.csrf()
         .disable()
         .authorizeRequests()
-        .antMatchers("/getServerInfo")
-        .permitAll()
         .antMatchers("/generate")
         .permitAll() // Allow access
+        .antMatchers("/getServerInfo")
+        .permitAll()
+        .antMatchers("/getTransactionHistory")
+        .permitAll()
+        .antMatchers("/bakong-khqr-transactions/**")
+        .permitAll()
+        .antMatchers("/ciftp/**")
+        .permitAll()
         .anyRequest()
         .authenticated()
         .and()
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
     return http.build();
   }
 }
