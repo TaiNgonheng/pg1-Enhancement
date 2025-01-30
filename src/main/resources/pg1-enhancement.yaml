@@ -684,20 +684,7 @@ components:
       title: JwtTokenResponse
       type: object
       properties:
-        version:
-          type: object
-          properties:
-            name:
-              type: string
-            date:
-              type: string
-        changesHistory:
-          type: array
-          items:
-            type: string
-        serverEnvironment:
-          type: string
-        description:
+        Token:
           type: string
     PendingBakongKHQRReponse:
       type: object

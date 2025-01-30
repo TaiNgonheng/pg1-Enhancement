@@ -7,12 +7,10 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RestController;
 
 @Service
 @AllArgsConstructor
 @Slf4j
-@RestController
 public class JwtController implements JwtApiDelegate {
 
   @Override
@@ -20,9 +18,7 @@ public class JwtController implements JwtApiDelegate {
     log.info("API: getJwtToken");
     String token = JwtUtil.generateToken();
     JwtTokenResponse jwtResponse = new JwtTokenResponse();
-    jwtResponse.setDescription("Generated Token: " + token);
-    jwtResponse.setServerEnvironment("Production");
-
+    jwtResponse.setToken(token);
     return ResponseEntity.ok(jwtResponse);
   }
 }
